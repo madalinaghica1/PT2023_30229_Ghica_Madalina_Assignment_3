@@ -6,7 +6,7 @@ package Model;
 public class Product {
     private int Id;
     private String name;
-    private int nr;
+    private int quantity;
     private float price;
 
     /**
@@ -20,7 +20,7 @@ public class Product {
     public Product(int Id, String name, int nr, float price) {
         this.Id = Id;
         this.name = name;
-        this.nr = nr;
+        this.quantity = nr;
         this.price = price;
     }
 
@@ -48,7 +48,7 @@ public class Product {
      * @return The quantity of the product.
      */
     public int getNr() {
-        return nr;
+        return quantity;
     }
 
     /**
@@ -66,7 +66,7 @@ public class Product {
      * @return A string representation of the product.
      */
     public String toString() {
-        return "Product [id=" + Id + ", name=" + name + ", nr=" + nr + ", price=" + price + "]";
+        return "Product [id=" + Id + ", name=" + name + ", nr=" + quantity + ", price=" + price + "]";
     }
 
     /**
@@ -87,12 +87,14 @@ public class Product {
         this.price = (float) newPrice;
     }
 
-    /**
-     * Sets the ID of the product.
-     *
-     * @param Id The new ID to be set for the product.
-     */
+
     public void setID(int Id) {
         this.Id = Id;
     }
+
+    public void setNr(int newQuantity) {
+        this.quantity=newQuantity;
+    }
+
+
 }

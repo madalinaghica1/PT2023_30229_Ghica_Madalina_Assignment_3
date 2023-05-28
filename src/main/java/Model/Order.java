@@ -23,7 +23,7 @@ public class Order {
     /**
      * The quantity of the product being ordered.
      */
-    private int q;
+    private int quantity;
 
     /**
      * Constructs an Order object with the given details.
@@ -31,13 +31,13 @@ public class Order {
      * @param idOrder The ID of the order.
      * @param nameC   The name of the client who made the order.
      * @param nameP   The name of the product being ordered.
-     * @param q       The quantity of the product being ordered.
+     * @param q The quantity of product being order.
      */
     public Order(int idOrder, String nameC, String nameP, int q) {
         this.idOrder = idOrder;
         this.nameC = nameC;
         this.nameP = nameP;
-        this.q = q;
+        this.quantity = q;
     }
 
     /**
@@ -73,7 +73,7 @@ public class Order {
      * @return The quantity of the product being ordered.
      */
     public int getCantitate() {
-        return q;
+        return quantity;
     }
 
     /**
@@ -83,6 +83,6 @@ public class Order {
      */
     @Override
     public String toString() {
-        return "Order [idOrder=" + idOrder + ", nameC=" + nameC + ", nameP=" + nameP + ", quantity=" + q + "]";
+        return "Order [idOrder=" + idOrder + ", nameC=" + nameC + ", nameP=" + nameP + ", quantity=" + quantity + "]";
     }
 }

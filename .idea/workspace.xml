@@ -4,32 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a941f9e3-1617-4f05-b2a2-be81591c01be" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/BusinessLogic/AgeValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/BusinessLogic/ClientBLL.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/BusinessLogic/EmailValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/BusinessLogic/OrderBLL.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/BusinessLogic/ProductBLL.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/BusinessLogic/Validator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Connection/ConnectionFactory.java" afterDir="false" />
+    <list default="true" id="a941f9e3-1617-4f05-b2a2-be81591c01be" name="Changes" comment="PT2023_30229_Ghica_Madalina_Assignment_3">
       <change afterPath="$PROJECT_DIR$/src/main/java/DataAccess/AbstractDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/DataAccess/ClientDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/DataAccess/OrderDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/DataAccess/ProductDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Client.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Order.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Product.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Presentation/GUIInterface.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/App.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/start/Start.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/start/reflectionExample.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/org/example/AppTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Model/Bill.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLogic/ClientBLL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLogic/ClientBLL.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLogic/OrderBLL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLogic/OrderBLL.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLogic/ProductBLL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLogic/ProductBLL.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Connection/ConnectionFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Connection/ConnectionFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/DataAccess/ClientDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DataAccess/ClientDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/DataAccess/OrderDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DataAccess/OrderDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/DataAccess/ProductDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DataAccess/ProductDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Model/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Model/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Presentation/GUIInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Presentation/GUIInterface.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,6 +71,19 @@
       <option name="presentableId" value="Default" />
       <updated>1683562843946</updated>
     </task>
+    <task id="LOCAL-00001" summary="Commit">
+      <created>1684402073719</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1684402073719</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Commit" />
+    <MESSAGE value="PT2023_30229_Ghica_Madalina_Assignment_3" />
+    <option name="LAST_COMMIT_MESSAGE" value="PT2023_30229_Ghica_Madalina_Assignment_3" />
   </component>
 </project>

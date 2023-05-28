@@ -28,7 +28,7 @@ public class ProductDAO {
     /**
      * The SQL statement for inserting a new product into the database.
      */
-    private static final String insertStatementString = "INSERT INTO product (Id, name, nr, price) VALUES (?,?,?,?)";
+    private static final String insertStatementString = "INSERT INTO product (Id, name, quantity, price) VALUES (?,?,?,?)";
 
     /**
      * The SQL statement for finding a product by ID in the database.
@@ -53,7 +53,7 @@ public class ProductDAO {
             if (rs.next()) {
                 int Id = rs.getInt("Id");
                 String name = rs.getString("name");
-                int nr = rs.getInt("nr");
+                int nr = rs.getInt("quantity");
                 float price = rs.getFloat("price");
                 toReturn = new Product(Id, name, nr, price);
             }
@@ -99,46 +99,35 @@ public class ProductDAO {
         return insertedId;
     }
 
-    public static List<Product> getAllProducts() {
-            List<Product> products = new ArrayList<>();
-            Connection connection = ConnectionFactory.getConnection();
-            PreparedStatement statement = null;
-            ResultSet resultSet = null;
-            try {
-                String sql = "SELECT * FROM product";
-                statement = connection.prepareStatement(sql);
-                resultSet = statement.executeQuery();
-                while (resultSet.next()) {
-                    int Id = resultSet.getInt("Id");
-                    String name = resultSet.getString("name");
-                    int nr = resultSet.getInt("nr");
-                    float price = resultSet.getFloat("price");
-                    Product product = new Product(Id, name, nr, price);
-                    products.add(product);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                // Închide resursele
-                ConnectionFactory.close(resultSet);
-                ConnectionFactory.close(statement);
-                ConnectionFactory.close(connection);
+
+    public static Product findByName(String productName) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Product product = null;
+
+        try {
+            connection = ConnectionFactory.getConnection();
+            String sql = "SELECT * FROM product WHERE name = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, productName);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int quantity = resultSet.getInt("quantity");
+                float price = resultSet.getFloat("price");
+                // Assuming the column names and data types in the result set match the Product model
+                product = new Product(id, productName, quantity, price);
             }
-            return products;
-        }
-
-    public static boolean delete(Product product) {
-        String sql = "DELETE FROM product WHERE Id = ?"; // Schimbați "clients" cu numele tabelului corespunzător în baza de date
-
-        try (Connection connection = ConnectionFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, product.getID());
-
-            int rowsDeleted = statement.executeUpdate();
-            return rowsDeleted > 0;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+        } finally {
+            ConnectionFactory.close(resultSet);
+            ConnectionFactory.close(statement);
+            ConnectionFactory.close(connection);
         }
+
+        return product;
     }
 }

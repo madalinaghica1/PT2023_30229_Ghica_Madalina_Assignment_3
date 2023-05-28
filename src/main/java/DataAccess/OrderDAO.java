@@ -28,44 +28,12 @@ public class OrderDAO {
     /**
      * The SQL statement for inserting an order into the database.
      */
-    private static final String insertStatementString = "INSERT INTO tp.order (idOrder,nameC,nameP,q) VALUES (?,?,?,?)";
+    private static final String insertStatementString = "INSERT INTO tp.order (idOrder,nameC,nameP,quantity) VALUES (?,?,?,?)";
 
     /**
      * The SQL statement for finding an order by ID in the database.
      */
     private final static String findStatementString = "SELECT * FROM tp.order where idOrder = ?";
-
-    /**
-     * Finds an order by its ID in the database.
-     *
-     * @param oId The ID of the order to find.
-     * @return The found order or null if not found.
-     */
-    public static Order findById(int oId) {
-        Order toReturn = null;
-
-        Connection dbConnection = ConnectionFactory.getConnection();
-        PreparedStatement findStatement = null;
-        ResultSet rs = null;
-        try {
-            findStatement = dbConnection.prepareStatement(findStatementString);
-            findStatement.setLong(1, oId);
-            rs = findStatement.executeQuery();
-            rs.next();
-            int idOrder = rs.getInt("idOrder");
-            String nameC = rs.getString("nameC");
-            String nameP = rs.getString("nameP");
-            int q = rs.getInt("q");
-            toReturn = new Order(idOrder, nameC, nameP, q);
-        } catch (SQLException e) {
-            LOGGER.log(Level.WARNING,"OrderDAO:findById " + e.getMessage());
-        } finally {
-            ConnectionFactory.close(rs);
-            ConnectionFactory.close(findStatement);
-            ConnectionFactory.close(dbConnection);
-        }
-        return toReturn;
-    }
 
     /**
      * Inserts a new order into the database.
@@ -99,31 +67,5 @@ public class OrderDAO {
         return insertedId;
     }
 
-    public static List<Order> getAllOrders() {
-        List<Order> orders = new ArrayList<>();
-        Connection connection = ConnectionFactory.getConnection();
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        try {
-            String sql = "SELECT * FROM tp.order";
-            statement = connection.prepareStatement(sql);
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                int idOrder = resultSet.getInt("idOrder");
-                String nameC = resultSet.getString("nameC");
-                String nameP = resultSet.getString("nameP");
-                int q = resultSet.getInt("q");
-                Order order = new Order(idOrder, nameC, nameP, q);
-                orders.add(order);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Închide resursele
-            ConnectionFactory.close(resultSet);
-            ConnectionFactory.close(statement);
-            ConnectionFactory.close(connection);
-        }
-        return orders;
-    }
+
 }

@@ -13,14 +13,7 @@ import java.util.logging.Logger;
 import Connection.ConnectionFactory;
 import Model.Client;
 
-/**
- * The ClientDAO class is responsible for database operations related to the Client entity.
- * It provides methods for finding a client by ID and inserting a new client into the database.
- *
- * @Author: Technical University of Cluj-Napoca, Romania Distributed Systems
- *          Research Laboratory, http://dsrl.coned.utcluj.ro/
- * @Since: Apr 03, 2017
- */
+
 public class ClientDAO {
 
     protected static final Logger LOGGER = Logger.getLogger(ClientDAO.class.getName());
@@ -28,12 +21,7 @@ public class ClientDAO {
             + " VALUES (?,?,?,?,?)";
     private final static String findStatementString = "SELECT * FROM client WHERE clientID = ?";
 
-    /**
-     * Retrieves a client from the database based on the given client ID.
-     *
-     * @param clientId The ID of the client to find.
-     * @return The found client, or null if not found.
-     */
+
     public static Client findById(int clientId) {
         Client toReturn = null;
 
@@ -94,58 +82,5 @@ public class ClientDAO {
         return insertedId;
     }
 
-    public static List<Client> getAllClients() {
-        List<Client> clients = new ArrayList<>();
 
-        // Obține conexiunea la baza de date
-        Connection connection = ConnectionFactory.getConnection();
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-
-        try {
-            // Creează instrucțiunea SQL pentru a obține toți clienții
-            String sql = "SELECT * FROM client";
-            statement = connection.prepareStatement(sql);
-
-            // Execută interogarea
-            resultSet = statement.executeQuery();
-
-            // Parcurge rezultatele și construiește obiectele Client corespunzătoare
-            while (resultSet.next()) {
-                int id = resultSet.getInt("clientID");
-                String name = resultSet.getString("name");
-                String address = resultSet.getString("address");
-                String email = resultSet.getString("email");
-                int age = resultSet.getInt("age");
-
-                Client client = new Client(id, name, address, email, age);
-                clients.add(client);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Închide resursele
-            ConnectionFactory.close(resultSet);
-            ConnectionFactory.close(statement);
-            ConnectionFactory.close(connection);
-        }
-
-        return clients;
-    }
-
-    public static boolean delete(Client client) {
-            String sql = "DELETE FROM client WHERE clientID = ?"; // Schimbați "clients" cu numele tabelului corespunzător în baza de date
-
-            try (Connection connection = ConnectionFactory.getConnection();
-                 PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setInt(1, client.getID());
-
-                int rowsDeleted = statement.executeUpdate();
-                return rowsDeleted > 0;
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
 }
-

@@ -1,7 +1,8 @@
 package Presentation;
-import DataAccess.ClientDAO;
-import DataAccess.ProductDAO;
-import DataAccess.OrderDAO;
+import BusinessLogic.ClientBLL;
+import BusinessLogic.OrderBLL;
+import BusinessLogic.ProductBLL;
+import Model.Bill;
 import Model.Client;
 import Model.Order;
 import Model.Product;
@@ -11,6 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -72,9 +74,9 @@ public class GUIInterface {
                 String email = JOptionPane.showInputDialog(mainFrame, "Enter client email:");
                 int age = Integer.parseInt(JOptionPane.showInputDialog(mainFrame, "Enter client age:"));
                 Client newClient = new Client(id, name, address, email, age);
-                int insertedId = ClientDAO.insert(newClient);
-                if (insertedId != 0) {
-                    newClient.setClientID(insertedId);
+                int inserted = ClientBLL.insertClient(newClient);
+                if (inserted!= 0) {
+                    newClient.setClientID(inserted);
                     clientList.add(newClient);
                     populateTable(clientList, clientTableModel);
                     JOptionPane.showMessageDialog(mainFrame, "Client added successfully!");
@@ -83,6 +85,7 @@ public class GUIInterface {
                 }
             }
         });
+
         editClientButton.addActionListener(e -> {
             int selectedRow = clientTable.getSelectedRow();
             if (selectedRow != -1) {
@@ -92,10 +95,11 @@ public class GUIInterface {
                 JOptionPane.showMessageDialog(mainFrame, "Please select a client to edit!");
             }
         });
+
         deleteClientButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Cod pentru ștergerea unui client
+                // Code for deleting a client
                 int selectedRow = clientTable.getSelectedRow();
                 if (selectedRow != -1) {
                     int confirmed = JOptionPane.showConfirmDialog(mainFrame,
@@ -104,7 +108,7 @@ public class GUIInterface {
                             JOptionPane.YES_NO_OPTION);
                     if (confirmed == JOptionPane.YES_OPTION) {
                         Client client = clientList.get(selectedRow);
-                        boolean deleted = deleteClient(client); // Apelul metodei de ștergere a clientului
+                        boolean deleted = deleteClient(client); // Call the deleteClient method in the clientBLL
                         if (deleted) {
                             clientList.remove(client);
                             populateTable(clientList, clientTableModel);
@@ -118,6 +122,7 @@ public class GUIInterface {
                 }
             }
         });
+
         addProductButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int id = Integer.parseInt(JOptionPane.showInputDialog(mainFrame, "Enter Product id:"));
@@ -125,7 +130,7 @@ public class GUIInterface {
                 int nr = Integer.parseInt(JOptionPane.showInputDialog(mainFrame, "Enter nr:"));
                 float price = Float.parseFloat(JOptionPane.showInputDialog(mainFrame, "Enter price:"));
                 Product newProduct = new Product(id, name, nr, price);
-                int insertedId = ProductDAO.insert(newProduct);
+                int insertedId = ProductBLL.insertProduct(newProduct);
                 if (insertedId != 0) {
                     newProduct.setID(insertedId);
                     productList.add(newProduct);
@@ -136,6 +141,7 @@ public class GUIInterface {
                 }
             }
         });
+
         editProductButton.addActionListener(e -> {
             int selectedRow = productTable.getSelectedRow();
             if (selectedRow != -1) {
@@ -145,6 +151,7 @@ public class GUIInterface {
                 JOptionPane.showMessageDialog(mainFrame, "Please select a product to edit!");
             }
         });
+
         deleteProductButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -154,7 +161,7 @@ public class GUIInterface {
                             JOptionPane.YES_NO_OPTION);
                     if (confirmed == JOptionPane.YES_OPTION) {
                         Product product = productList.get(selectedRow);
-                        boolean deleted = deleteProduct(product); // Apelul metodei de ștergere a produsului
+                        boolean deleted = deleteProduct(product); // Call the deleteProduct method in the productBLL
                         if (deleted) {
                             productList.remove(product);
                             populateTable(productList, productTableModel);
@@ -168,28 +175,29 @@ public class GUIInterface {
                 }
             }
         });
+
         createOrderButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Obțineți comenzile din baza de date
-                List<Order> orderList = OrderDAO.getAllOrders();
+                // Get the orders from the database
+                List<Order> orderList = OrderBLL.getAllOrders();
 
-                // Crearea și configurarea ferestrei noi
+                // Create and configure the new window
                 JFrame orderFrame = new JFrame("Orders");
                 orderFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-                // Crearea modelului și tabelului pentru comenzile din baza de date
+                // Create the model and table for the orders from the database
                 DefaultTableModel orderTableModel = new DefaultTableModel();
                 JTable orderTable = new JTable(orderTableModel);
                 JScrollPane orderScrollPane = new JScrollPane(orderTable);
                 orderScrollPane.setPreferredSize(new Dimension(400, 200));
 
-                // Generați antetul tabelului pentru comenzile din baza de date
+                // Generate the table header for the orders from the database
                 generateTableHeader(Order.class, orderTableModel);
 
-                // Populați tabelul cu datele comenzilor din baza de date
+                // Populate the table with the order data from the database
                 populateTable(orderList, orderTableModel);
 
-                // Adăugarea tabelului la fereastra nouă
+                // Add the table to the new window
                 orderFrame.add(orderScrollPane);
                 orderFrame.pack();
                 orderFrame.setVisible(true);
@@ -211,21 +219,34 @@ public class GUIInterface {
                 productNameTextField.setText("");
                 quantityTextField.setText("");
 
-                // Add the order to the database
-                Order newOrder = new Order(orderId, clientName, productName, quantity);
-                int added = OrderDAO.insert(newOrder); // Assuming OrderDAO.insert() inserts the order into the database
-                if (added!=0) {
-                    // Add the order to the order list
-                    orderList.add(newOrder);
-                    // Refresh the order table
-                    populateTable(orderList, orderTableModel);
-                    // Show success message
-                    JOptionPane.showMessageDialog(mainFrame, "Order created successfully!");
+                // Check if there are enough products in stock
+                Product product = ProductBLL.findProductByName(productName);
+                if (product != null && product.getNr() >= quantity) {
+                    // Decrement the product stock
+                    product.setNr(product.getNr() - quantity);
+                    ProductBLL.updateProduct(product);
+
+                    // Add the order to the database
+                    Order newOrder = new Order(orderId, clientName, productName, quantity);
+                    int added = OrderBLL.insertOrder(newOrder); // Assuming OrderDAO.insert() inserts the order into the database
+                    if (added != 0) {
+                        // Add the order to the order list
+                        orderList.add(newOrder);
+                        // Refresh the order table
+                        populateTable(orderList, orderTableModel);
+                        // Show success message
+                        JOptionPane.showMessageDialog(mainFrame, "Order created successfully!");
+                    } else {
+                        JOptionPane.showMessageDialog(mainFrame, "Failed to create order!");
+                    }
                 } else {
-                    JOptionPane.showMessageDialog(mainFrame, "Failed to create order!");
+                    // Show under-stock message
+                    JOptionPane.showMessageDialog(mainFrame, "Not enough products in stock!");
                 }
             }
         });
+
+
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
@@ -257,7 +278,7 @@ public class GUIInterface {
         orderPanel.add(quantityTextField);
         orderPanel.add(createOrderButton);
 
-       // mainPanel.add(orderScrollPane, BorderLayout.CENTER);
+        // mainPanel.add(orderScrollPane, BorderLayout.CENTER);
         mainPanel.add(clientOperationsPanel, BorderLayout.WEST);
         mainPanel.add(productOperationsPanel, BorderLayout.EAST);
         mainPanel.add(orderPanel, BorderLayout.SOUTH);
@@ -270,25 +291,25 @@ public class GUIInterface {
      *
      * @param client The client to be edited.
      */
-        private void openEditClientDialog(Client client) {
-            String newId = JOptionPane.showInputDialog(mainFrame, "Enter new Id:", client.getID());
-            String newName = JOptionPane.showInputDialog(mainFrame, "Enter new name:", client.getName());
-            String newAddress = JOptionPane.showInputDialog(mainFrame, "Enter new address:", client.getAddress());
-            String newEmail = JOptionPane.showInputDialog(mainFrame, "Enter new email:", client.getEmail());
-            String newAge = JOptionPane.showInputDialog(mainFrame, "Enter new age:", client.getAge());
+    private void openEditClientDialog(Client client) {
+        String newId = JOptionPane.showInputDialog(mainFrame, "Enter new Id:", client.getID());
+        String newName = JOptionPane.showInputDialog(mainFrame, "Enter new name:", client.getName());
+        String newAddress = JOptionPane.showInputDialog(mainFrame, "Enter new address:", client.getAddress());
+        String newEmail = JOptionPane.showInputDialog(mainFrame, "Enter new email:", client.getEmail());
+        String newAge = JOptionPane.showInputDialog(mainFrame, "Enter new age:", client.getAge());
 
-                int confirmed = JOptionPane.showConfirmDialog(mainFrame, "Are you sure you want to update this client?", "Confirm Update", JOptionPane.YES_NO_OPTION);
-                if (confirmed == JOptionPane.YES_OPTION) {
-                    client.setClientID(Integer.parseInt(newId));
-                    client.setName(newName);
-                    client.setAddress(newAddress);
-                    client.setEmail(newEmail);
-                    client.setAge(Integer.parseInt(newAge));
-                    populateTable(clientList, clientTableModel);
-                    JOptionPane.showMessageDialog(mainFrame, "Client updated successfully!");
-                }
-            }
-
+        int confirmed = JOptionPane.showConfirmDialog(mainFrame, "Are you sure you want to update this client?", "Confirm Update", JOptionPane.YES_NO_OPTION);
+        if (confirmed == JOptionPane.YES_OPTION) {
+            client.setClientID(Integer.parseInt(newId));
+            client.setName(newName);
+            client.setAddress(newAddress);
+            client.setEmail(newEmail);
+            client.setAge(Integer.parseInt(newAge));
+            populateTable(clientList, clientTableModel);
+            JOptionPane.showMessageDialog(mainFrame, "Client updated successfully!");
+        }
+    }
+//face update produs
     private void openEditProductDialog(Product product) {
         String newName = JOptionPane.showInputDialog(mainFrame, "Enter new name:", product.getName());
         if (newName != null) {
@@ -311,11 +332,11 @@ public class GUIInterface {
      */
     private boolean deleteProduct(Product product) {
         try {
-            boolean deleted = ProductDAO.delete( product); // Utilizarea ClientDAO pentru a șterge clientul din baza de date
+            boolean deleted = ProductBLL.delete( product);
             return deleted;
         } catch (Exception e) {
             e.printStackTrace();
-            return false; // returnează false dacă a apărut o eroare în timpul ștergerii
+            return false;
         }
     }
     /**
@@ -326,11 +347,11 @@ public class GUIInterface {
      */
     private boolean deleteClient(Client client) {
         try {
-            boolean deleted = ClientDAO.delete(client); // Utilizarea ClientDAO pentru a șterge clientul din baza de date
+            boolean deleted = ClientBLL.delete( client);
             return deleted;
         } catch (Exception e) {
             e.printStackTrace();
-            return false; // returnează false dacă a apărut o eroare în timpul ștergerii
+            return false;
         }
     }
     /**
@@ -374,13 +395,12 @@ public class GUIInterface {
      */
     public static void main(String[] args) {
         GUIInterface gui = new GUIInterface();
-        gui.clientList = ClientDAO.getAllClients(); // Obține lista de clienți din baza de date
-        gui.productList = ProductDAO.getAllProducts(); //
+        gui.clientList = ClientBLL.getAllClients(); 
+        gui.productList = ProductBLL.getAllProducts(); //
         gui.generateTableHeader(Client.class, gui.clientTableModel);
         gui.generateTableHeader(Product.class, gui.productTableModel);
         gui.populateTable(gui.clientList, gui.clientTableModel);
         gui.populateTable(gui.productList, gui.productTableModel);
     }
 }
-
 
